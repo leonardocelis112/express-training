@@ -13,22 +13,43 @@
     <p id="todo-count"></p>
 
     <ul id="todo-list"></ul>
+    <br />
+    <p>Completed</p>
+    <ul id="completed-list"></ul>
 
     <script>
+      const clickListener = (event) => {
+        const id = event.target.id;
+        fetch("/complete/" + id, {
+          method: "PATCH",
+        }).then((response) => {
+          window.location.reload();
+        });
+      };
+
       fetch("/list")
         .then((response) => {
           return response.json();
         })
         .then((json) => {
           const list = document.getElementById("todo-list");
+          const completedList = document.getElementById("completed-list");
+          list.addEventListener("click", clickListener);
+
           const todoCountTitle = document.getElementById("todo-count");
 
-          const todoCount = json.data.length;
+          const todoCount = json.data.filter((todo) => !todo.done).length;
 
           todoCountTitle.innerHTML = "You have " + todoCount + " TODOs left";
 
           json.data.forEach((todo) => {
-            list.innerHTML += "<li>" + todo.name + "</li>";
+            if (todo.done === true) {
+              completedList.innerHTML +=
+                "<li id='" + todo.id + "'>" + todo.name + "</li>";
+            } else {
+              list.innerHTML +=
+                "<li id='" + todo.id + "'>" + todo.name + "</li>";
+            }
           });
         });
     </script>

@@ -30,6 +30,15 @@ app.post("/create", (req, res) => {
   });
 });
 
+app.patch("/complete/:id", (req, res) => {
+  Todo.findByPk(req.params.id).then((todo) => {
+    todo.done = true;
+    todo.save().then(() => {
+      res.json({ data: todo });
+    });
+  });
+});
+
 app.listen(3000, () => {
   console.log("Sever is running");
 });
