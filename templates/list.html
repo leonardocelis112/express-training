@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>List of todos</h1>
+
+    <a href="/new">create</a>
+
+    <p id="todo-count"></p>
+
+    <ul id="todo-list"></ul>
+
+    <script>
+      fetch("/list")
+        .then((response) => {
+          return response.json();
+        })
+        .then((json) => {
+          const list = document.getElementById("todo-list");
+          const todoCountTitle = document.getElementById("todo-count");
+
+          const todoCount = json.data.length;
+
+          todoCountTitle.innerHTML = "You have " + todoCount + " TODOs left";
+
+          json.data.forEach((todo) => {
+            list.innerHTML += "<li>" + todo.name + "</li>";
+          });
+        });
+    </script>
+  </body>
+</html>
